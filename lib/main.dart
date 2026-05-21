@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hamin/features/dashboard/dashboard_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hamin/features/dashboard/screens/dashboard_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: MyApp()
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hamin/core/theme/app_colors.dart';
 import 'package:hamin/core/widgets/task_card.dart';
+import 'package:hamin/features/dashboard/providers/task_provider.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tasks = ref.watch(taskProvider);
 
-class _DashboardScreenState extends State<DashboardScreen> {
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -39,15 +38,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
             SizedBox(height: 15),
             Text("Your tasks", style: TextStyle(fontSize: 28)),
             SizedBox(height: 8),
-            TaskCard(
-              matkul: "Praktikum Sistem Operasi",
-              namaTugas: "Manajemen User",
-              deskripsi: "Boleh video boleh laporan",
-              deadline: "Kamis 21 Mei 2026 - 23-59",
-              isDone: true,
-              onTap: () {
-                print("Checkbox mode on");
-              },
+            Expanded(
+              child: ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  final task = tasks[index];
+              
+                  return TaskCard(
+                    matkul: task.matkul,
+                    namaTugas: task.namaTugas,
+                    deskripsi: task.deskripsi,
+                    deadline: task.deadline,
+                    isDone: task.isDone,
+                    onTap: () {
+                      ref.read(taskProvider.notifier).toggleTask(index);
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

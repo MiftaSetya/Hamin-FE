@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hamin/core/theme/app_colors.dart';
 import 'package:hamin/core/widgets/task_card.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +39,16 @@ class DashboardScreen extends StatelessWidget {
             SizedBox(height: 15),
             Text("Your tasks", style: TextStyle(fontSize: 28)),
             SizedBox(height: 8),
-            TaskCard()
+            TaskCard(
+              matkul: "Praktikum Sistem Operasi",
+              namaTugas: "Manajemen User",
+              deskripsi: "Boleh video boleh laporan",
+              deadline: "Kamis 21 Mei 2026 - 23-59",
+              isDone: true,
+              onTap: () {
+                print("Checkbox mode on");
+              },
+            ),
           ],
         ),
       ),

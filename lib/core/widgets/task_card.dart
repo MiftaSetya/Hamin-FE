@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:hamin/core/theme/app_colors.dart';
 
-class TaskCard extends StatefulWidget {
-  const TaskCard({super.key});
+class TaskCard extends StatelessWidget {
+  final String matkul;
+  final String namaTugas;
+  final String deskripsi;
+  final String deadline;
+  final bool isDone;
+  final VoidCallback onTap;
 
-  @override
-  State<TaskCard> createState() => _TaskCardState();
-}
-
-class _TaskCardState extends State<TaskCard> {
-  bool isDone = false;
+  const TaskCard({
+    super.key,
+    required this.matkul,
+    required this.namaTugas,
+    required this.deskripsi,
+    required this.deadline,
+    required this.isDone,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +40,18 @@ class _TaskCardState extends State<TaskCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Praktikum Sistem Operasi",
+            matkul,
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: Colors.black,
             ),
           ),
 
           const SizedBox(height: 4),
 
           Text(
-            "Nama Tugas : Manajemen user",
+            "Nama Tugas : $namaTugas",
             style: TextStyle(
               fontSize: 16,
               color: Colors.black,
@@ -55,7 +63,7 @@ class _TaskCardState extends State<TaskCard> {
           const SizedBox(height: 4),
 
           Text(
-            "Deskripsi : boleh video boleh laporan ga dikumpulin juga boleh",
+            "Deskripsi : $deskripsi",
             style: TextStyle(
               fontSize: 15,
               color: Colors.black,
@@ -77,7 +85,7 @@ class _TaskCardState extends State<TaskCard> {
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(30),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(
                       Icons.schedule_rounded,
@@ -86,7 +94,7 @@ class _TaskCardState extends State<TaskCard> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      "Kamis, 21 Mei 2026 - 23:59",
+                      deadline,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -99,11 +107,7 @@ class _TaskCardState extends State<TaskCard> {
               const Spacer(),
 
               GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isDone = !isDone;
-                  });
-                },
+                onTap: onTap,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
                   width: 42,

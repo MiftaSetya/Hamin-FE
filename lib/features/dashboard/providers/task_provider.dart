@@ -1,30 +1,53 @@
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hamin/features/dashboard/models/task_model.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class TaskNotifier extends StateNotifier<List<TaskModel>> {
-  TaskNotifier()
-    : super([
+  final Box<TaskModel> taskBox;
+
+  TaskNotifier(this.taskBox) : super([]) {
+    _initializeTasks();
+  }
+
+  void _initializeTasks() {
+    if (taskBox.isEmpty) {
+      taskBox.addAll([
         TaskModel(
           matkul: "Praktikum Sistem Operasi",
           namaTugas: "Manajemen User",
           deskripsi: "Boleh video boleh laporan",
-          deadline: "Kamis, 21 Mei 2026 - 23:59",
+          deadline: "Kamis, 21 Mei 2026",
           isDone: false,
         ),
       ]);
+    }
+
+    state = taskBox.values.toList();
+  }
 
   void toggleTask(int index) {
-    state = [
-      for (int i = 0; i < state.length; i++)
-        if (i == index)
-          state[i].copyWith(isDone: !state[i].isDone)
-        else
-          state[i],
-    ];
+    final updatedTask = state[index].copyWith(isDone: !state[index].isDone);
+
+    taskBox.putAt(index, updatedTask);
+
+    state = taskBox.values.toList();
+
+    if (taskBox.isEmpty) {
+      taskBox.addAll([
+        TaskModel(
+          matkul: "Praktikum Sistem Operasi",
+          namaTugas: "Manajemen User",
+          deskripsi: "Boleh video boleh laporan",
+          deadline: "Kamis, 21 Mei 2026",
+          isDone: false,
+        ),
+      ]);
+    }
   }
 }
 
-final taskProvider = 
-    StateNotifierProvider<TaskNotifier, List<TaskModel>>(
-  (ref) => TaskNotifier(),
-);
+final taskProvider =
+    StateNotifierProvider<TaskNotifier, List<TaskModel>>((ref) {
+  final box = Hive.box<TaskModel>('tasks');
+  return TaskNotifier(box);
+});

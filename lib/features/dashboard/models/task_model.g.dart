@@ -18,7 +18,7 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
     };
     return TaskModel(
       matkul: fields[0] as String,
-      namaTugas: fields[1] as String,
+      judul: fields[1] as String,
       deskripsi: fields[2] as String,
       deadline: fields[3] as String,
       isDone: fields[4] as bool,
@@ -32,7 +32,7 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       ..writeByte(0)
       ..write(obj.matkul)
       ..writeByte(1)
-      ..write(obj.namaTugas)
+      ..write(obj.judul)
       ..writeByte(2)
       ..write(obj.deskripsi)
       ..writeByte(3)

@@ -39,22 +39,29 @@ class DashboardScreen extends ConsumerWidget {
             Text("Your tasks", style: TextStyle(fontSize: 28)),
             SizedBox(height: 8),
             Expanded(
-              child: ListView.builder(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  final task = tasks[index];
-              
-                  return TaskCard(
-                    matkul: task.matkul,
-                    namaTugas: task.namaTugas,
-                    deskripsi: task.deskripsi,
-                    deadline: task.deadline,
-                    isDone: task.isDone,
-                    onTap: () {
-                      ref.read(taskProvider.notifier).toggleTask(index);
-                    },
-                  );
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await ref.read(taskProvider.notifier).fetchTasks();
                 },
+                child: ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: tasks.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final task = tasks[index];
+
+                    return TaskCard(
+                      matkul: task.matkul,
+                      namaTugas: task.judul,
+                      deskripsi: task.deskripsi,
+                      deadline: task.deadline,
+                      isDone: task.isDone,
+                      onTap: () {
+                        ref.read(taskProvider.notifier).toggleTask(index);
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ],

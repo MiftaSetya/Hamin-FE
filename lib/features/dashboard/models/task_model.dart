@@ -8,7 +8,7 @@ class TaskModel {
   final String matkul;
 
   @HiveField(1)
-  final String namaTugas;
+  final String judul;
 
   @HiveField(2)
   final String deskripsi;
@@ -21,22 +21,41 @@ class TaskModel {
 
   TaskModel({
     required this.matkul,
-    required this.namaTugas,
+    required this.judul,
     required this.deskripsi,
     required this.deadline,
-    required this.isDone,
+    this.isDone = false,
   });
+
+  factory TaskModel.fromJson(Map<String, dynamic> json) {
+    return TaskModel(
+        matkul: json['matkul'] ?? '',
+        judul: json['judul'] ?? '',
+        deskripsi: json['deskripsi'] ?? '',
+        deadline: json['deadline'] ?? '',
+        isDone: false);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'matkul': matkul,
+      'judul': judul,
+      'deskripsi': deskripsi,
+      'deadline': deadline,
+      'isDone': isDone
+    };
+  }
 
   TaskModel copyWith({
     String? matkul,
-    String? namaTugas,
+    String? judul,
     String? deskripsi,
     String? deadline,
     bool? isDone,
   }) {
     return TaskModel(
       matkul: matkul ?? this.matkul,
-      namaTugas: namaTugas ?? this.namaTugas,
+      judul: judul ?? this.judul,
       deskripsi: deskripsi ?? this.deskripsi,
       deadline: deadline ?? this.deadline,
       isDone: isDone ?? this.isDone,

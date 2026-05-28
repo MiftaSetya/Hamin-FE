@@ -1,28 +1,40 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hamin/features/dashboard/models/task_model.dart';
+import 'package:hamin/features/dashboard/services/task_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class TaskNotifier extends StateNotifier<List<TaskModel>> {
   final Box<TaskModel> taskBox;
+  final TaskService service;
 
-  TaskNotifier(this.taskBox) : super([]) {
-    _initializeTasks();
+  TaskNotifier(this.taskBox, this.service) : super([]) {
+    fetchTasks();
   }
 
-  void _initializeTasks() {
-    if (taskBox.isEmpty) {
-      taskBox.addAll([
-        TaskModel(
-          matkul: "Praktikum Sistem Operasi",
-          namaTugas: "Manajemen User",
-          deskripsi: "Boleh video boleh laporan",
-          deadline: "Kamis, 21 Mei 2026",
-          isDone: false,
-        ),
-      ]);
-    }
+  Future<void> fetchTasks() async {
+    try {
+      final apiTasks = await service.fetchTasks();
 
-    state = taskBox.values.toList();
+      final mergedTasks = apiTasks.map((apiTasks) {
+        final localMatch = taskBox.values
+            .where((localTask) => localTask.judul == apiTasks.judul)
+            .toList();
+
+        if (localMatch.isNotEmpty) {
+          return apiTasks.copyWith(isDone: localMatch.first.isDone);
+        }
+
+        return apiTasks;
+      }).toList();
+
+      await taskBox.clear();
+
+      await taskBox.addAll(mergedTasks);
+
+      state = mergedTasks;
+    } catch (e) {
+      print(e);
+    }
   }
 
   void toggleTask(int index) {
@@ -31,23 +43,11 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     taskBox.putAt(index, updatedTask);
 
     state = taskBox.values.toList();
-
-    if (taskBox.isEmpty) {
-      taskBox.addAll([
-        TaskModel(
-          matkul: "Praktikum Sistem Operasi",
-          namaTugas: "Manajemen User",
-          deskripsi: "Boleh video boleh laporan",
-          deadline: "Kamis, 21 Mei 2026",
-          isDone: false,
-        ),
-      ]);
-    }
   }
 }
 
 final taskProvider =
     StateNotifierProvider<TaskNotifier, List<TaskModel>>((ref) {
   final box = Hive.box<TaskModel>('tasks');
-  return TaskNotifier(box);
+  return TaskNotifier(box, TaskService());
 });

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hamin/core/theme/app_colors.dart';
 import 'package:hamin/core/widgets/task_card.dart';
 import 'package:hamin/features/dashboard/providers/task_provider.dart';
+import 'package:hamin/features/dashboard/widgets/task_detail_sheet.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -56,8 +57,17 @@ class DashboardScreen extends ConsumerWidget {
                       deskripsi: task.deskripsi,
                       deadline: task.deadline,
                       isDone: task.isDone,
-                      onTap: () {
+                      onCheck: () {
                         ref.read(taskProvider.notifier).toggleTask(index);
+                      },
+                      onCardTap: () {
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (_) {
+                              return TaskDetailSheet(task: task);
+                            });
                       },
                     );
                   },

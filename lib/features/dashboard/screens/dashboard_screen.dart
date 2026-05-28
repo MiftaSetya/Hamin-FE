@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hamin/core/theme/app_colors.dart';
-import 'package:hamin/core/widgets/task_card.dart';
+import 'package:hamin/features/dashboard/widgets/task_card.dart';
 import 'package:hamin/features/dashboard/providers/task_provider.dart';
 import 'package:hamin/features/dashboard/widgets/task_detail_sheet.dart';
 

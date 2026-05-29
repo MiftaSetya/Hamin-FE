@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hamin/features/auth/screens/login_screen.dart';
 import 'package:hamin/features/dashboard/models/task_model.dart';
 import 'package:hamin/features/dashboard/screens/dashboard_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Poppins'
       ),
-      home: DashboardScreen()
+      home: LoginScreen()
     );
   }
 }
